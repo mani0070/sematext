@@ -4,6 +4,8 @@ do
     echo "$node"
 jmxhostip=$(nslookup ditools | tail -2 | awk -F ":" '{print $2}')
 echo "$jmxhostip"
+#remove the whitespace
+echo ${jmxport//[[:blank:]]/}
 TOKEN=$(cat t.json | jq ".data.apps.spm | {token:.[] | select(.name == \"${node//,/\" or .name == \"}\") | .token}" | jq '.token')
 echo ${TOKEN//\"/}
 echo "/opt/spm/bin/spm-client-setup-conf.sh ${TOKEN//\"/} zookeeper standalone jmxhost:${jmxhostip}  jmxport:3000"
